@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
     <link rel="apple-touch-icon" href="/favicon.png">
@@ -41,9 +41,30 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="dark-mode">
+    <!-- ACCESS GATE: appears until a valid key is entered -->
+    <div id="gateOverlay" aria-hidden="false">
+      <div class="gate-card" role="dialog" aria-labelledby="gate-title" aria-modal="true">
+        <div class="gate-top">
+          <img class="gate-favicon" src="/favicon.png" alt="Moon">
+          <div class="gate-title" id="gate-title">Moon</div>
+        </div>
+
+        <p class="gate-sub">Enter access key to continue</p>
+
+        <div class="gate-input-row">
+          <input id="accessKeyInput" type="password" placeholder="Enter key" aria-label="Access key input">
+          <button id="accessKeyButton" type="button">Enter</button>
+        </div>
+
+        <div id="keyError" role="alert" aria-live="polite" class="gate-error" hidden>Key not valid</div>
+        <div class="gate-hint">Hint: ask yusuf</div>
+      </div>
+    </div>
+
+    <!-- MAIN SITE CONTENT (unchanged) -->
     <header>
         <div class="header-content">
-            <div class="logo">Moon</div>
+            <div class="logo">gn-math</div>
             <div class="search-container">
                 <input type="text" id="searchBar" placeholder="Search zones..." oninput="filterZones()">
                 <select id="sortOptions" onchange="sortZones()">
@@ -126,13 +147,98 @@
             <input type="file" id="importData" style="display: none;" onchange="loadData(event)">
         </div>
     </footer>
-    <script src="script.js"></script>
+
+    <!--
+      IMPORTANT: we don't include script.js directly here.
+      script.js will be injected only after the key is validated.
+    -->
     <script>
-        const search = new URLSearchParams(window.location.search);
-        const privacy = search.get('privacy');
-        if (privacy) {
-            loadPrivacy();
+    (function() {
+      // ------- CONFIG: update VALID_KEYS with the key(s) you want -------
+      const VALID_KEYS = ['your-key-here']; // <-- replace with the real key(s)
+      const ACCESS_FLAG = 'moon_access_unlocked';
+
+      function isUnlocked() {
+        try { return localStorage.getItem(ACCESS_FLAG) === '1'; } catch (e) { return false; }
+      }
+      function setUnlocked() {
+        try { localStorage.setItem(ACCESS_FLAG, '1'); } catch (e) {}
+      }
+
+      function hideGate() {
+        const gate = document.getElementById('gateOverlay');
+        if (gate) { gate.setAttribute('aria-hidden', 'true'); gate.style.display = 'none'; }
+        document.documentElement.classList.remove('locked');
+        document.body.style.overflow = '';
+      }
+
+      function showGate() {
+        const gate = document.getElementById('gateOverlay');
+        if (gate) { gate.setAttribute('aria-hidden', 'false'); gate.style.display = 'flex'; }
+        document.documentElement.classList.add('locked');
+        document.body.style.overflow = 'hidden';
+        // focus input
+        const input = document.getElementById('accessKeyInput');
+        if (input) input.focus();
+      }
+
+      function showError(text) {
+        const err = document.getElementById('keyError');
+        if (!err) return;
+        err.hidden = false;
+        err.textContent = text;
+        err.style.color = '#ff6b6b';
+        const card = document.querySelector('.gate-card');
+        if (card) {
+          card.classList.remove('shake');
+          void card.offsetWidth;
+          card.classList.add('shake');
         }
+      }
+
+      function validateKey(value) {
+        if (!value) return false;
+        return VALID_KEYS.includes(value.trim());
+      }
+
+      function injectAppScript() {
+        // inject script.js after successful unlock
+        const s = document.createElement('script');
+        s.src = 'script.js';
+        s.defer = false;
+        s.onload = function() { /* loaded */ };
+        s.onerror = function() { console.error('Failed to load script.js'); };
+        document.body.appendChild(s);
+      }
+
+      function unlockFlow() {
+        const input = document.getElementById('accessKeyInput');
+        const val = input ? input.value : '';
+        if (validateKey(val)) {
+          setUnlocked();
+          hideGate();
+          injectAppScript();
+        } else {
+          showError('Key not valid');
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        // wire up button + enter key
+        const btn = document.getElementById('accessKeyButton');
+        const input = document.getElementById('accessKeyInput');
+        if (btn) btn.addEventListener('click', unlockFlow);
+        if (input) input.addEventListener('keydown', (e) => { if (e.key === 'Enter') unlockFlow(); });
+
+        // If already unlocked, skip gate and load the site
+        if (isUnlocked()) {
+          hideGate();
+          injectAppScript();
+        } else {
+          showGate();
+        }
+      });
+    })();
     </script>
 </body>
 </html>
