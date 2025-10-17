@@ -1,4 +1,8 @@
-/* ACCESS GATE STYLES — Dark Moon themed (append to end of style.css) */
+/* APPEND THE FOLLOWING to the end of your existing style.css
+   These styles reuse your existing variables and font settings so the gate matches
+   the exact theme and typography. Paste them at the end of style.css. */
+
+/* ACCESS GATE STYLES — matches Dark Moon theme and typography */
 #gateOverlay {
   position: fixed;
   inset: 0;
@@ -7,26 +11,30 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(180deg, rgba(2,6,12,0.88), rgba(2,6,12,0.94));
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
   pointer-events: auto;
+  padding: 1rem;
 }
 
+/* card uses the same radius/shadow variables and surface colors */
 .gate-card {
-  width: 420px;
-  max-width: calc(100% - 32px);
-  border-radius: 14px;
+  width: 460px;
+  max-width: 100%;
+  border-radius: var(--radius-lg);
   padding: 1.25rem 1.25rem 1.5rem;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border: 1px solid rgba(255,255,255,0.04);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.6), 0 0 30px rgba(159,191,255,0.04);
+  background: var(--gradient-surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-xl), var(--shadow-glow);
   color: var(--text);
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
   align-items: stretch;
   text-align: center;
+  font-family: inherit; /* match site font */
 }
 
+/* top row with favicon and title uses same logo styling */
 .gate-top {
   display: flex;
   align-items: center;
@@ -36,26 +44,29 @@
 .gate-favicon {
   width: 44px;
   height: 44px;
-  object-fit: contain;
+  object-fit: cover;
   border-radius: 8px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.6), 0 0 12px rgba(159,191,255,0.06);
+  background: var(--border-light);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6), 0 0 12px rgba(159,191,255,0.04);
 }
 .gate-title {
   font-size: 1.45rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: var(--text);
   background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(190,210,255,0.6) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+/* subtitle reuses text-muted */
 .gate-sub {
   color: var(--text-muted);
   margin: 0;
   font-weight: 600;
 }
 
+/* input row uses existing radii and border colors */
 .gate-input-row {
   display: flex;
   gap: 0.5rem;
@@ -64,29 +75,33 @@
 #accessKeyInput {
   flex: 1;
   padding: 0.75rem 0.9rem;
-  border-radius: 10px;
+  border-radius: var(--radius);
   border: 1px solid var(--border-light);
-  background: rgba(255,255,255,0.01);
+  background: var(--bg-secondary);
   color: var(--text);
   outline: none;
   font-size: 14px;
+  font-family: inherit;
 }
+#accessKeyInput::placeholder { color: var(--text-muted); }
 #accessKeyInput:focus {
   box-shadow: 0 0 0 6px rgba(159,191,255,0.06);
   transform: translateY(-1px);
 }
 #accessKeyButton {
   padding: 0.75rem 1rem;
-  border-radius: 10px;
+  border-radius: var(--radius);
   border: 0;
-  background: linear-gradient(90deg, var(--primary), var(--primary-hover));
-  color: #07101b;
+  background: var(--gradient-primary);
+  color: #ffffff;
   font-weight: 700;
   cursor: pointer;
   transition: transform .15s ease, box-shadow .15s ease;
+  box-shadow: var(--shadow-sm);
 }
 #accessKeyButton:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 
+/* error message style */
 .gate-error {
   font-weight: 700;
   color: #ff6b6b;
@@ -94,17 +109,26 @@
   margin-top: 6px;
 }
 
+/* hint text matches text-muted */
 .gate-hint {
   color: var(--text-muted);
   font-size: 13px;
   margin-top: 4px;
 }
 
-/* Prevent interactions while locked */
-.locked *:not(#gateOverlay) {
+/* prevent interactions with the rest of the page while gate is shown,
+   but ensure gate itself remains interactive */
+.locked header,
+.locked main,
+.locked footer,
+.locked #zoneViewer,
+.locked #popupOverlay,
+.locked .adsbygoogle {
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
+  filter: blur(0.2px); /* subtle de-emphasis */
+  opacity: 0.98;
 }
 
 /* small shake animation for invalid attempts */
@@ -118,4 +142,10 @@
 }
 .gate-card.shake {
   animation: gate-shake 420ms ease;
+}
+
+/* responsive: reduce card width on narrow screens */
+@media (max-width: 480px) {
+  .gate-card { width: calc(100% - 24px); padding: 1rem; }
+  #accessKeyInput { font-size: 15px; }
 }
