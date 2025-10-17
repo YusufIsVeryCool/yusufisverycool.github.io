@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+    <head>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
     <link rel="apple-touch-icon" href="/favicon.png">
@@ -41,7 +41,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="dark-mode">
-    <!-- ACCESS GATE: appears until a valid key is entered -->
+    <!-- ACCESS GATE: appears until a valid key is entered.
+         This overlay matches the site's font/colors using existing CSS variables.
+         The page's original index.html content is left intact — script.js is NOT loaded
+         until the user unlocks by entering a valid key. -->
     <div id="gateOverlay" aria-hidden="false">
       <div class="gate-card" role="dialog" aria-labelledby="gate-title" aria-modal="true">
         <div class="gate-top">
@@ -52,7 +55,7 @@
         <p class="gate-sub">Enter access key to continue</p>
 
         <div class="gate-input-row">
-          <input id="accessKeyInput" type="password" placeholder="Enter key" aria-label="Access key input">
+          <input id="accessKeyInput" type="password" placeholder="Enter key" aria-label="Access key input" autocomplete="off" />
           <button id="accessKeyButton" type="button">Enter</button>
         </div>
 
@@ -61,7 +64,6 @@
       </div>
     </div>
 
-    <!-- MAIN SITE CONTENT (unchanged) -->
     <header>
         <div class="header-content">
             <div class="logo">gn-math</div>
@@ -148,16 +150,18 @@
         </div>
     </footer>
 
-    <!--
-      IMPORTANT: we don't include script.js directly here.
-      script.js will be injected only after the key is validated.
-    -->
+    <!-- NOTE: script.js is intentionally NOT included here until unlock.
+         The inline gate script below will inject script.js after a successful key entry,
+         preserving your original index.html and style.css behavior. -->
     <script>
     (function() {
-      // ------- CONFIG: update VALID_KEYS with the key(s) you want -------
-      const VALID_KEYS = ['kafir']; // <-- replace with the real key(s)
+      // ==== CONFIG ====
+      // Replace 'your-key-here' with the actual key(s) you want to accept.
+      // You can add multiple keys: ['key1','key2']
+      const VALID_KEYS = ['your-key-here'];
       const ACCESS_FLAG = 'moon_access_unlocked';
 
+      // ==== helpers ====
       function isUnlocked() {
         try { return localStorage.getItem(ACCESS_FLAG) === '1'; } catch (e) { return false; }
       }
@@ -177,9 +181,8 @@
         if (gate) { gate.setAttribute('aria-hidden', 'false'); gate.style.display = 'flex'; }
         document.documentElement.classList.add('locked');
         document.body.style.overflow = 'hidden';
-        // focus input
         const input = document.getElementById('accessKeyInput');
-        if (input) input.focus();
+        if (input) { input.focus(); input.select(); }
       }
 
       function showError(text) {
@@ -202,11 +205,11 @@
       }
 
       function injectAppScript() {
-        // inject script.js after successful unlock
+        if (document.querySelector('script[data-app-script]')) return; // already injected
         const s = document.createElement('script');
         s.src = 'script.js';
-        s.defer = false;
-        s.onload = function() { /* loaded */ };
+        s.setAttribute('data-app-script', '1');
+        s.onload = function() { /* app script loaded */ };
         s.onerror = function() { console.error('Failed to load script.js'); };
         document.body.appendChild(s);
       }
@@ -223,14 +226,16 @@
         }
       }
 
+      // ==== wiring ====
       document.addEventListener('DOMContentLoaded', function() {
-        // wire up button + enter key
         const btn = document.getElementById('accessKeyButton');
         const input = document.getElementById('accessKeyInput');
         if (btn) btn.addEventListener('click', unlockFlow);
-        if (input) input.addEventListener('keydown', (e) => { if (e.key === 'Enter') unlockFlow(); });
+        if (input) {
+          // allow typing and Enter to submit
+          input.addEventListener('keydown', (e) => { if (e.key === 'Enter') unlockFlow(); });
+        }
 
-        // If already unlocked, skip gate and load the site
         if (isUnlocked()) {
           hideGate();
           injectAppScript();
@@ -238,8 +243,13 @@
           showGate();
         }
       });
+
+      // Optional helpers for debugging from console:
+      window.__moonGate = {
+        unlockForTesting: function() { setUnlocked(); hideGate(); injectAppScript(); },
+        reset: function() { localStorage.removeItem(ACCESS_FLAG); showGate(); }
+      };
     })();
     </script>
 </body>
 </html>
-
