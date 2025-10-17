@@ -1,255 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
-    <link rel="apple-touch-icon" href="/favicon.png">
-    <script>
-        window.addEventListener('beforeunload', function (event) {
-            event.preventDefault();
-            event.returnValue = '';
-            return 'if u leave ts might not save cuh';
-        });
-    </script>
-    <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5521219086088837" crossorigin="anonymous"></script>
-    <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WX5VS54ZDW"></script>
-    <meta name="google-adsense-account" content="ca-pub-5521219086088837">
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-        gtag('config', 'G-WX5VS54ZDW');
-    </script>
-    <script async src="https://fundingchoicesmessages.google.com/i/pub-5521219086088837?ers=1"></script><script>(function() {function signalGooglefcPresent() {if (!window.frames['googlefcPresent'][...]
-    <script src="https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main/gnmath.js"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moon</title>
-    <meta name="title" content="Moon">
-    <meta name="description" content="Moon — a dark, moonlit theme for the site. Explore zones under moonlight.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yusufisverycool.github.io/">
-    <meta property="og:title" content="Moon">
-    <meta property="og:description" content="Moon — a dark, moonlit theme for the site. Explore zones under moonlight.">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://yusufisverycool.github.io/">
-    <meta name="twitter:title" content="Moon">
-    <meta name="twitter:description" content="Moon — a dark, moonlit theme for the site. Explore zones under moonlight.">
-    <link rel="stylesheet" href="style.css">
+<head>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moon</title>
+  <meta name="title" content="Moon">
+  <meta name="description" content="Moon — a dark, moonlit theme for the site. Explore zones under moonlight.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yusufisverycool.github.io/">
+  <meta property="og:title" content="Moon">
+  <meta property="og:description" content="Moon — a dark, moonlit theme for the site. Explore zones under moonlight.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="dark-mode">
-    <!-- ACCESS GATE: appears until a valid key is entered.
-         This overlay matches the site's font/colors using existing CSS variables.
-         The page's original index.html content is left intact — script.js is NOT loaded
-         until the user unlocks by entering a valid key. -->
-    <div id="gateOverlay" aria-hidden="false">
-      <div class="gate-card" role="dialog" aria-labelledby="gate-title" aria-modal="true">
-        <div class="gate-top">
-          <img class="gate-favicon" src="/favicon.png" alt="Moon">
-          <div class="gate-title" id="gate-title">Moon</div>
-        </div>
+  <!-- ACCESS GATE (appears above everything) -->
+  <div id="gateOverlay" aria-hidden="false">
+    <div class="gate-card" role="dialog" aria-labelledby="gate-title" aria-modal="true">
+      <div class="gate-top">
+        <img class="gate-favicon" src="/favicon.png" alt="Moon">
+        <div class="gate-title" id="gate-title">Moon</div>
+      </div>
 
-        <p class="gate-sub">Enter access key to continue</p>
+      <p class="gate-sub">Enter access key to continue</p>
 
-        <div class="gate-input-row">
-          <input id="accessKeyInput" type="password" placeholder="Enter key" aria-label="Access key input" autocomplete="off" />
-          <button id="accessKeyButton" type="button">Enter</button>
-        </div>
+      <div class="gate-input-row">
+        <input id="accessKeyInput" type="password" placeholder="Enter key" aria-label="Access key input">
+        <button id="accessKeyButton" type="button">Enter</button>
+      </div>
 
-        <div id="keyError" role="alert" aria-live="polite" class="gate-error" hidden>Key not valid</div>
-        <div class="gate-hint">Hint: ask yusuf</div>
+      <div id="keyError" role="alert" aria-live="polite" class="gate-error" hidden>Key not valid</div>
+      <div class="gate-hint">Hint: ask yusuf</div>
+    </div>
+  </div>
+
+  <!-- --- Keep the rest of your site as it is --- -->
+  <header>
+    <div class="header-content">
+      <div class="logo">Moon</div>
+      <div class="search-container">
+        <input type="text" id="searchBar" placeholder="Search zones..." oninput="filterZones()">
+        <select id="sortOptions" onchange="sortZones()">
+          <option value="name">Name</option>
+          <option value="id">ID (Date)</option>
+          <option value="popular">Popular</option>
+        </select>
+      </div>
+      <div class="control-buttons">
+        <button id="settings" style="background-color: var(--primary-color); color: white; border: none; border-radius: 4px; padding: 0.5rem 1rem; font-size: 16px; cursor: pointer;">Settings</button>
       </div>
     </div>
+  </header>
 
-    <header>
-        <div class="header-content">
-            <div class="logo">gn-math</div>
-            <div class="search-container">
-                <input type="text" id="searchBar" placeholder="Search zones..." oninput="filterZones()">
-                <select id="sortOptions" onchange="sortZones()">
-                    <option value="name">Name</option>
-                    <option value="id">ID (Date)</option>
-                    <option value="popular">Popular</option>
-                </select>
-            </div>
-            <div class="control-buttons">
-                <button id="settings" style="background-color: var(--primary-color); color: white; border: none; border-radius: 4px; padding: 0.5rem 1rem; font-size: 16px; cursor: pointer;">Settings</button>
-            </div>
-        </div>
-    </header>
-    <ins class="adsbygoogle"
-    style="display:block; text-align:center;"
-    data-ad-client="ca-pub-5521219086088837"
-    data-ad-slot="5549138288"
-    data-ad-format="auto"
-    data-full-width-responsive="true"></ins>
-   <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-   </script>
+  <ins class="adsbygoogle"
+       style="display:block; text-align:center;"
+       data-ad-client="ca-pub-5521219086088837"
+       data-ad-slot="5549138288"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
 
-    <main>
-        <details id="featuredZonesWrapper" open>
-            <summary id="allZonesSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">Featured Zones</summary>
-            <div id="featuredZones" class="zone-container"></div>
-        </details>
-        <br><hr><br>
-        <details id="allZonesWrapper" open>
-            <summary id="allSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">All Zones</summary>
-            <div id="container">Loading...</div>
-        </details>
-    </main>
+  <main>
+    <details id="featuredZonesWrapper" open>
+      <summary id="allZonesSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">Featured Zones</summary>
+      <div id="featuredZones" class="zone-container"></div>
+    </details>
+    <br><hr><br>
+    <details id="allZonesWrapper" open>
+      <summary id="allSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">All Zones</summary>
+      <div id="container">Loading...</div>
+    </details>
+  </main>
 
-    <div id="zoneViewer">
-        <div class="zone-header">
-            <div class="zone-title">
-                <h2 id="zoneName">zone</h2>
-                <span id="zoneId" style="display: none;"></span>
-                <a id="zoneAuthor" href="#" target="_blank">by Author</a>
-            </div>
-            <div class="zone-controls">
-                <button onclick="fullscreenZone()">Fullscreen</button>
-                <button onclick="aboutBlank()">Open in New Tab</button>
-                <button onclick="downloadZone()">Download</button>
-                <button onclick="closeZone()">Close</button>
-            </div>
-        </div>
-        <iframe id="zoneFrame"></iframe>
+  <div id="zoneViewer"> ...existing viewer markup... </div>
+
+  <div id="popupOverlay"> ...existing popup markup... </div>
+
+  <footer>
+    <div class="footer-links">
+      <a href="#" onclick="showContact(); return false;">Contact</a>
+      <a href="#" onclick="loadPrivacy(); return false;">Privacy Policy</a>
+      <a href="javascript:saveData()">Export Data</a>
+      <a href="#" onclick="document.getElementById('importData').click(); return false;">Import Data</a>
+      <input type="file" id="importData" style="display: none;" onchange="loadData(event)">
     </div>
+  </footer>
 
-    <div id="popupOverlay">
-        <div class="popup">
-            <div class="popup-header">
-                <h3 id="popupTitle">Title</h3>
-                <button id="popupClose" onclick="closePopup()">×</button>
-            </div>
-            <div id="popupBody">
-                Content will be here
-            </div>
-        </div>
-    </div>
-
-    <ins class="adsbygoogle"
-    style="display:block; text-align:center;"
-    data-ad-client="ca-pub-5521219086088837"
-    data-ad-slot="5549138288"
-    data-ad-format="auto"
-    data-full-width-responsive="true"></ins>
-   <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-   </script>
-    <footer>
-        <div class="footer-links">
-            <a href="#" onclick="showContact(); return false;">Contact</a>
-            <a href="#" onclick="loadPrivacy(); return false;">Privacy Policy</a>
-            <a href="javascript:saveData()">Export Data</a>
-            <a href="#" onclick="document.getElementById('importData').click(); return false;">Import Data</a>
-            <input type="file" id="importData" style="display: none;" onchange="loadData(event)">
-        </div>
-    </footer>
-
-    <!-- NOTE: script.js is intentionally NOT included here until unlock.
-         The inline gate script below will inject script.js after a successful key entry,
-         preserving your original index.html and style.css behavior. -->
-    <script>
-    (function() {
-      // ==== CONFIG ====
-      // Replace 'your-key-here' with the actual key(s) you want to accept.
-      // You can add multiple keys: ['key1','key2']
-      const VALID_KEYS = ['your-key-here'];
-      const ACCESS_FLAG = 'moon_access_unlocked';
-
-      // ==== helpers ====
-      function isUnlocked() {
-        try { return localStorage.getItem(ACCESS_FLAG) === '1'; } catch (e) { return false; }
-      }
-      function setUnlocked() {
-        try { localStorage.setItem(ACCESS_FLAG, '1'); } catch (e) {}
-      }
-
-      function hideGate() {
-        const gate = document.getElementById('gateOverlay');
-        if (gate) { gate.setAttribute('aria-hidden', 'true'); gate.style.display = 'none'; }
-        document.documentElement.classList.remove('locked');
-        document.body.style.overflow = '';
-      }
-
-      function showGate() {
-        const gate = document.getElementById('gateOverlay');
-        if (gate) { gate.setAttribute('aria-hidden', 'false'); gate.style.display = 'flex'; }
-        document.documentElement.classList.add('locked');
-        document.body.style.overflow = 'hidden';
-        const input = document.getElementById('accessKeyInput');
-        if (input) { input.focus(); input.select(); }
-      }
-
-      function showError(text) {
-        const err = document.getElementById('keyError');
-        if (!err) return;
-        err.hidden = false;
-        err.textContent = text;
-        err.style.color = '#ff6b6b';
-        const card = document.querySelector('.gate-card');
-        if (card) {
-          card.classList.remove('shake');
-          void card.offsetWidth;
-          card.classList.add('shake');
-        }
-      }
-
-      function validateKey(value) {
-        if (!value) return false;
-        return VALID_KEYS.includes(value.trim());
-      }
-
-      function injectAppScript() {
-        if (document.querySelector('script[data-app-script]')) return; // already injected
-        const s = document.createElement('script');
-        s.src = 'script.js';
-        s.setAttribute('data-app-script', '1');
-        s.onload = function() { /* app script loaded */ };
-        s.onerror = function() { console.error('Failed to load script.js'); };
-        document.body.appendChild(s);
-      }
-
-      function unlockFlow() {
-        const input = document.getElementById('accessKeyInput');
-        const val = input ? input.value : '';
-        if (validateKey(val)) {
-          setUnlocked();
-          hideGate();
-          injectAppScript();
-        } else {
-          showError('Key not valid');
-        }
-      }
-
-      // ==== wiring ====
-      document.addEventListener('DOMContentLoaded', function() {
-        const btn = document.getElementById('accessKeyButton');
-        const input = document.getElementById('accessKeyInput');
-        if (btn) btn.addEventListener('click', unlockFlow);
-        if (input) {
-          // allow typing and Enter to submit
-          input.addEventListener('keydown', (e) => { if (e.key === 'Enter') unlockFlow(); });
-        }
-
-        if (isUnlocked()) {
-          hideGate();
-          injectAppScript();
-        } else {
-          showGate();
-        }
-      });
-
-      // Optional helpers for debugging from console:
-      window.__moonGate = {
-        unlockForTesting: function() { setUnlocked(); hideGate(); injectAppScript(); },
-        reset: function() { localStorage.removeItem(ACCESS_FLAG); showGate(); }
-      };
-    })();
-    </script>
+  <!-- include script.js (modified) -->
+  <script src="script.js" defer></script>
 </body>
 </html>
