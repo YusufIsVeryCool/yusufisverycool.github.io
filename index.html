@@ -1,94 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
-  <link rel="apple-touch-icon" href="/favicon.png">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Moon</title>
-  <meta name="title" content="Moon">
-  <meta name="description" content="Moon — a dark, moonlit theme for the site. Explore zones under moonlight.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://yusufisverycool.github.io/">
-  <meta property="og:title" content="Moon">
-  <meta property="og:description" content="Moon — a dark, moonlit theme for the site. Explore zones under moonlight.">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="style.css">
+    <head>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <script>
+        window.addEventListener('beforeunload', function (event) {
+            event.preventDefault();
+            event.returnValue = '';
+            return 'if u leave ts might not save cuh';
+        });
+    </script>
+    <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5521219086088837" crossorigin="anonymous"></script>
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WX5VS54ZDW"></script>
+    <meta name="google-adsense-account" content="ca-pub-5521219086088837">
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'G-WX5VS54ZDW');
+    </script>
+    <script async src="https://fundingchoicesmessages.google.com/i/pub-5521219086088837?ers=1"></script><script>(function() {function signalGooglefcPresent() {if (!window.frames['googlefcPresent'][...]
+    <script src="https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main/gnmath.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moon</title>
+    <meta name="title" content="Moon">
+    <meta name="description" content="Moon — a dark, moonlit theme for the site. Explore zones under moonlight.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yusufisverycool.github.io/">
+    <meta property="og:title" content="Moon">
+    <meta property="og:description" content="Moon — a dark, moonlit theme for the site. Explore zones under moonlight.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://yusufisverycool.github.io/">
+    <meta name="twitter:title" content="Moon">
+    <meta name="twitter:description" content="Moon — a dark, moonlit theme for the site. Explore zones under moonlight.">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="dark-mode">
-  <!-- ACCESS GATE (appears above everything) -->
-  <div id="gateOverlay" aria-hidden="false">
-    <div class="gate-card" role="dialog" aria-labelledby="gate-title" aria-modal="true">
-      <div class="gate-top">
-        <img class="gate-favicon" src="/favicon.png" alt="Moon">
-        <div class="gate-title" id="gate-title">Moon</div>
-      </div>
+    <header>
+        <div class="header-content">
+            <div class="logo">Moon</div>
+            <div class="search-container">
+                <input type="text" id="searchBar" placeholder="Search zones..." oninput="filterZones()">
+                <select id="sortOptions" onchange="sortZones()">
+                    <option value="name">Name</option>
+                    <option value="id">ID (Date)</option>
+                    <option value="popular">Popular</option>
+                </select>
+            </div>
+            <div class="control-buttons">
+                <button id="settings" style="background-color: var(--primary-color); color: white; border: none; border-radius: 4px; padding: 0.5rem 1rem; font-size: 16px; cursor: pointer;">Settings</button>
+            </div>
+        </div>
+    </header>
+    <ins class="adsbygoogle"
+    style="display:block; text-align:center;"
+    data-ad-client="ca-pub-5521219086088837"
+    data-ad-slot="5549138288"
+    data-ad-format="auto"
+    data-full-width-responsive="true"></ins>
+   <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+   </script>
 
-      <p class="gate-sub">Enter access key to continue</p>
+    <main>
+        <details id="featuredZonesWrapper" open>
+            <summary id="allZonesSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">Featured Zones</summary>
+            <div id="featuredZones" class="zone-container"></div>
+        </details>
+        <br><hr><br>
+        <details id="allZonesWrapper" open>
+            <summary id="allSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">All Zones</summary>
+            <div id="container">Loading...</div>
+        </details>
+    </main>
 
-      <div class="gate-input-row">
-        <input id="accessKeyInput" type="password" placeholder="Enter key" aria-label="Access key input">
-        <button id="accessKeyButton" type="button">Enter</button>
-      </div>
-
-      <div id="keyError" role="alert" aria-live="polite" class="gate-error" hidden>Key not valid</div>
-      <div class="gate-hint">Hint: ask yusuf</div>
+    <div id="zoneViewer">
+        <div class="zone-header">
+            <div class="zone-title">
+                <h2 id="zoneName">zone</h2>
+                <span id="zoneId" style="display: none;"></span>
+                <a id="zoneAuthor" href="#" target="_blank">by Author</a>
+            </div>
+            <div class="zone-controls">
+                <button onclick="fullscreenZone()">Fullscreen</button>
+                <button onclick="aboutBlank()">Open in New Tab</button>
+                <button onclick="downloadZone()">Download</button>
+                <button onclick="closeZone()">Close</button>
+            </div>
+        </div>
+        <iframe id="zoneFrame"></iframe>
     </div>
-  </div>
 
-  <!-- --- Keep the rest of your site as it is --- -->
-  <header>
-    <div class="header-content">
-      <div class="logo">Moon</div>
-      <div class="search-container">
-        <input type="text" id="searchBar" placeholder="Search zones..." oninput="filterZones()">
-        <select id="sortOptions" onchange="sortZones()">
-          <option value="name">Name</option>
-          <option value="id">ID (Date)</option>
-          <option value="popular">Popular</option>
-        </select>
-      </div>
-      <div class="control-buttons">
-        <button id="settings" style="background-color: var(--primary-color); color: white; border: none; border-radius: 4px; padding: 0.5rem 1rem; font-size: 16px; cursor: pointer;">Settings</button>
-      </div>
+    <div id="popupOverlay">
+        <div class="popup">
+            <div class="popup-header">
+                <h3 id="popupTitle">Title</h3>
+                <button id="popupClose" onclick="closePopup()">×</button>
+            </div>
+            <div id="popupBody">
+                Content will be here
+            </div>
+        </div>
     </div>
-  </header>
 
-  <ins class="adsbygoogle"
-       style="display:block; text-align:center;"
-       data-ad-client="ca-pub-5521219086088837"
-       data-ad-slot="5549138288"
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
-
-  <main>
-    <details id="featuredZonesWrapper" open>
-      <summary id="allZonesSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">Featured Zones</summary>
-      <div id="featuredZones" class="zone-container"></div>
-    </details>
-    <br><hr><br>
-    <details id="allZonesWrapper" open>
-      <summary id="allSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">All Zones</summary>
-      <div id="container">Loading...</div>
-    </details>
-  </main>
-
-  <div id="zoneViewer"> ...existing viewer markup... </div>
-
-  <div id="popupOverlay"> ...existing popup markup... </div>
-
-  <footer>
-    <div class="footer-links">
-      <a href="#" onclick="showContact(); return false;">Contact</a>
-      <a href="#" onclick="loadPrivacy(); return false;">Privacy Policy</a>
-      <a href="javascript:saveData()">Export Data</a>
-      <a href="#" onclick="document.getElementById('importData').click(); return false;">Import Data</a>
-      <input type="file" id="importData" style="display: none;" onchange="loadData(event)">
-    </div>
-  </footer>
-
-  <!-- include script.js (modified) -->
-  <script src="script.js" defer></script>
+    <ins class="adsbygoogle"
+    style="display:block; text-align:center;"
+    data-ad-client="ca-pub-5521219086088837"
+    data-ad-slot="5549138288"
+    data-ad-format="auto"
+    data-full-width-responsive="true"></ins>
+   <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+   </script>
+    <footer>
+        <div class="footer-links">
+            <a href="#" onclick="showContact(); return false;">Contact</a>
+            <a href="#" onclick="loadPrivacy(); return false;">Privacy Policy</a>
+            <a href="javascript:saveData()">Export Data</a>
+            <a href="#" onclick="document.getElementById('importData').click(); return false;">Import Data</a>
+            <input type="file" id="importData" style="display: none;" onchange="loadData(event)">
+        </div>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+        const search = new URLSearchParams(window.location.search);
+        const privacy = search.get('privacy');
+        if (privacy) {
+            loadPrivacy();
+        }
+    </script>
 </body>
 </html>
