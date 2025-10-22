@@ -5,10 +5,10 @@ const searchBar = document.getElementById('searchBar');
 const sortOptions = document.getElementById('sortOptions');
 // https://www.jsdelivr.com/tools/purge
 const zonesurls = [
-    "https://cdn.jsdelivr.net/gh/yusufisverycool/assets@main/zones.json",
-    "https://cdn.jsdelivr.net/gh/yusufisverycool/assets@latest/zones.json",
-    "https://cdn.jsdelivr.net/gh/yusufisverycool/assets@master/zones.json",
-    "https://cdn.jsdelivr.net/gh/yusufisverycool/assets/zones.json"
+    "https://cdn.jsdelivr.net/gh/yusufisverycool/assets67@main/zones.json",
+    "https://cdn.jsdelivr.net/gh/yusufisverycool/assets67@latest/zones.json",
+    "https://cdn.jsdelivr.net/gh/yusufisverycool/assets67@master/zones.json",
+    "https://cdn.jsdelivr.net/gh/yusufisverycool/assets67/zones.json"
 ];
 let zonesURL = zonesurls[Math.floor(Math.random() * zonesurls.length)];
 const coverURL = "https://cdn.jsdelivr.net/gh/yusufisverycool/covers@main";
@@ -22,14 +22,14 @@ async function listZones() {
       let shajson;
       let sha;
         try {
-          sharesponse = await fetch("https://api.github.com/repos/yusufisverycool/assets/commits?t="+Date.now());
+          sharesponse = await fetch("https://api.github.com/repos/yusufisverycool/assets67/commits?t="+Date.now());
         } catch (error) {}
         if (sharesponse && sharesponse.status === 200) {
           try {
             shajson = await sharesponse.json();
             sha = shajson[0]['sha'];
             if (sha) {
-                zonesURL = `https://cdn.jsdelivr.net/gh/yusufisverycool/assets@${sha}/zones.json`;
+                zonesURL = `https://cdn.jsdelivr.net/gh/yusufisverycool/assets67@${sha}/zones.json`;
             }
           } catch (error) {
             try {
@@ -37,7 +37,7 @@ async function listZones() {
                 if (secondarysharesponse && secondarysharesponse.status === 200) {
                     sha = (await secondarysharesponse.text()).trim();
                     if (sha) {
-                        zonesURL = `https://cdn.jsdelivr.net/gh/yusufisverycool/assets@${sha}/zones.json`;
+                        zonesURL = `https://cdn.jsdelivr.net/gh/yusufisverycool/assets67@${sha}/zones.json`;
                     }
                 }
             } catch(error) {}
@@ -660,5 +660,6 @@ HTMLCanvasElement.prototype.toDataURL = function (...args) {
     return "";
 
 };
+
 
 
