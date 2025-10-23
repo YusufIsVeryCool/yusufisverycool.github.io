@@ -1,14 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
     <link rel="apple-touch-icon" href="/favicon.png">
+    <!-- Load Tailwind CSS for the Key Gate UI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the Key Gate UI */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1f2937; /* Dark background to match the "Moon" theme */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        /* Style for the actual content wrapper to ensure it takes full viewport after unlock */
+        #main-content-wrapper {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        /* Hides scrollbar on the body while the gate is visible, to prevent background scrolling */
+        body.gate-active {
+            overflow: hidden;
+            display: block; /* Override flex properties to allow full-page layout after unlock */
+            min-height: auto;
+        }
+    </style>
     <script>
         window.addEventListener('beforeunload', function (event) {
-            event.preventDefault();
-            event.returnValue = '';
-            return 'if u leave ts might not save cuh';
+            // Check if content is visible before showing the warning
+            if (!document.getElementById('key-gate') || document.getElementById('key-gate').classList.contains('hidden')) {
+                event.preventDefault();
+                event.returnValue = '';
+                return 'if u leave ts might not save cuh';
+            }
         });
     </script>
     <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5521219086088837" crossorigin="anonymous"></script>
@@ -40,99 +68,184 @@
     <meta name="twitter:description" content="Moon — a dark, moonlit theme for the site. Explore zones under moonlight.">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="dark-mode">
-    <header>
-        <div class="header-content">
-            <div class="logo">Moon</div>
-            <div class="search-container">
-                <input type="text" id="searchBar" placeholder="Search zones..." oninput="filterZones()">
-                <select id="sortOptions" onchange="sortZones()">
-                    <option value="name">Name</option>
-                    <option value="id">ID (Date)</option>
-                    <option value="popular">Popular</option>
-                </select>
-            </div>
-            <div class="control-buttons">
-                <button id="settings" style="background-color: var(--primary-color); color: white; border: none; border-radius: 4px; padding: 0.5rem 1rem; font-size: 16px; cursor: pointer;">Settings</button>
-            </div>
-        </div>
-    </header>
-    <ins class="adsbygoogle"
-    style="display:block; text-align:center;"
-    data-ad-client="ca-pub-5521219086088837"
-    data-ad-slot="5549138288"
-    data-ad-format="auto"
-    data-full-width-responsive="true"></ins>
-   <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-   </script>
+<body class="gate-active">
 
-    <main>
-        <details id="featuredZonesWrapper" open>
-            <summary id="allZonesSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">Featured Zones</summary>
-            <div id="featuredZones" class="zone-container"></div>
-        </details>
-        <br><hr><br>
-        <details id="allZonesWrapper" open>
-            <summary id="allSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">All Zones</summary>
-            <div id="container">Loading...</div>
-        </details>
-    </main>
+    <!-- Key Gate Overlay (Themed Dark Card) -->
+    <div id="key-gate" class="fixed inset-0 flex items-center justify-center p-4 bg-gray-900 bg-opacity-90 z-50 transition-opacity duration-500">
+        <!-- Dark Card styling applied here -->
+        <div class="w-full max-w-md bg-gray-800 p-8 rounded-xl shadow-2xl border border-gray-700">
+            <h1 class="text-3xl font-bold text-center text-white mb-4">Key Needed!</h1>
+            <p class="text-center text-gray-400 mb-6">Enter the secret key to view the Moon zones.</p>
 
-    <div id="zoneViewer">
-        <div class="zone-header">
-            <div class="zone-title">
-                <h2 id="zoneName">zone</h2>
-                <span id="zoneId" style="display: none;"></span>
-                <a id="zoneAuthor" href="#" target="_blank">by Author</a>
-            </div>
-            <div class="zone-controls">
-                <button onclick="fullscreenZone()">Fullscreen</button>
-                <button onclick="aboutBlank()">Open in New Tab</button>
-                <button onclick="downloadZone()">Download</button>
-                <button onclick="closeZone()">Close</button>
-            </div>
-        </div>
-        <iframe id="zoneFrame"></iframe>
-    </div>
+            <!-- Input styled for dark theme -->
+            <input type="password" id="secret-key-input" placeholder="Secret Key"
+                   class="w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-150 mb-4 placeholder-gray-400">
 
-    <div id="popupOverlay">
-        <div class="popup">
-            <div class="popup-header">
-                <h3 id="popupTitle">Title</h3>
-                <button id="popupClose" onclick="closePopup()">×</button>
-            </div>
-            <div id="popupBody">
-                Content will be here
-            </div>
+            <!-- Button using indigo accent -->
+            <button onclick="checkKey()"
+                    class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-indigo-700 transition duration-150 shadow-md hover:shadow-lg">
+                Unlock Moon
+            </button>
+
+            <!-- Error message styled for dark theme -->
+            <p id="error-message" class="text-red-400 text-center mt-4 hidden"></p>
         </div>
     </div>
 
-    <ins class="adsbygoogle"
-    style="display:block; text-align:center;"
-    data-ad-client="ca-pub-5521219086088837"
-    data-ad-slot="5549138288"
-    data-ad-format="auto"
-    data-full-width-responsive="true"></ins>
-   <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-   </script>
-    <footer>
-        <div class="footer-links">
-            <a href="#" onclick="showContact(); return false;">Contact</a>
-            <a href="#" onclick="loadPrivacy(); return false;">Privacy Policy</a>
-            <a href="javascript:saveData()">Export Data</a>
-            <a href="#" onclick="document.getElementById('importData').click(); return false;">Import Data</a>
-            <input type="file" id="importData" style="display: none;" onchange="loadData(event)">
+    <!-- Main Content Wrapper (Original Page Content - Hidden by default) -->
+    <div id="main-content-wrapper" class="hidden min-h-screen w-full dark-mode">
+        <!-- START OF ORIGINAL index.html CONTENT -->
+        <header>
+            <div class="header-content">
+                <div class="logo">Moon</div>
+                <div class="search-container">
+                    <input type="text" id="searchBar" placeholder="Search zones..." oninput="filterZones()">
+                    <select id="sortOptions" onchange="sortZones()">
+                        <option value="name">Name</option>
+                        <option value="id">ID (Date)</option>
+                        <option value="popular">Popular</option>
+                    </select>
+                </div>
+                <div class="control-buttons">
+                    <button id="settings" style="background-color: var(--primary-color); color: white; border: none; border-radius: 4px; padding: 0.5rem 1rem; font-size: 16px; cursor: pointer;">Settings</button>
+                </div>
+            </div>
+        </header>
+        <ins class="adsbygoogle"
+        style="display:block; text-align:center;"
+        data-ad-client="ca-pub-5521219086088837"
+        data-ad-slot="5549138288"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+       <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+       </script>
+
+        <main>
+            <details id="featuredZonesWrapper" open>
+                <summary id="allZonesSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">Featured Zones</summary>
+                <div id="featuredZones" class="zone-container"></div>
+            </details>
+            <br><hr><br>
+            <details id="allZonesWrapper" open>
+                <summary id="allSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">All Zones</summary>
+                <div id="container">Loading...</div>
+            </details>
+        </main>
+
+        <div id="zoneViewer">
+            <div class="zone-header">
+                <div class="zone-title">
+                    <h2 id="zoneName">zone</h2>
+                    <span id="zoneId" style="display: none;"></span>
+                    <a id="zoneAuthor" href="#" target="_blank">by Author</a>
+                </div>
+                <div class="zone-controls">
+                    <button onclick="fullscreenZone()">Fullscreen</button>
+                    <button onclick="aboutBlank()">Open in New Tab</button>
+                    <button onclick="downloadZone()">Download</button>
+                    <button onclick="closeZone()">Close</button>
+                </div>
+            </div>
+            <iframe id="zoneFrame"></iframe>
         </div>
-    </footer>
-    <script src="script.js"></script>
+
+        <div id="popupOverlay">
+            <div class="popup">
+                <div class="popup-header">
+                    <h3 id="popupTitle">Title</h3>
+                    <button id="popupClose" onclick="closePopup()">×</button>
+                </div>
+                <div id="popupBody">
+                    Content will be here
+                </div>
+            </div>
+        </div>
+
+        <ins class="adsbygoogle"
+        style="display:block; text-align:center;"
+        data-ad-client="ca-pub-5521219086088837"
+        data-ad-slot="5549138288"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+       <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+       </script>
+        <footer>
+            <div class="footer-links">
+                <a href="#" onclick="showContact(); return false;">Contact</a>
+                <a href="#" onclick="loadPrivacy(); return false;">Privacy Policy</a>
+                <a href="javascript:saveData()">Export Data</a>
+                <a href="#" onclick="document.getElementById('importData').click(); return false;">Import Data</a>
+                <input type="file" id="importData" style="display: none;" onchange="loadData(event)">
+            </div>
+        </footer>
+        <script src="script.js"></script>
+        <script>
+            const search = new URLSearchParams(window.location.search);
+            const privacy = search.get('privacy');
+            if (privacy) {
+                loadPrivacy();
+            }
+        </script>
+        <!-- END OF ORIGINAL index.html CONTENT -->
+    </div>
+
+    <!-- JavaScript for Key Gate Logic -->
     <script>
-        const search = new URLSearchParams(window.location.search);
-        const privacy = search.get('privacy');
-        if (privacy) {
-            loadPrivacy();
+        const VALID_KEY = "kafir"; // <--- KEY HAS BEEN CHANGED TO "kafir"
+        const keyInput = document.getElementById('secret-key-input');
+        const keyGate = document.getElementById('key-gate');
+        const mainContentWrapper = document.getElementById('main-content-wrapper');
+        const errorMessage = document.getElementById('error-message');
+
+        keyInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                checkKey();
+            }
+        });
+
+        /**
+         * Checks the entered key against the VALID_KEY constant.
+         * If valid, hides the gate and shows the content.
+         */
+        function checkKey() {
+            const enteredKey = keyInput.value.trim();
+
+            if (enteredKey === VALID_KEY) {
+                // Key is valid: Hide the gate and show the main content
+                keyGate.style.opacity = '0'; // Start transition
+                
+                setTimeout(() => {
+                    keyGate.classList.add('hidden'); // Hide key gate
+                    keyGate.remove(); // Remove from DOM after hidden (optional cleanup)
+
+                    // Show content wrapper and fade it in
+                    mainContentWrapper.classList.remove('hidden');
+                    mainContentWrapper.style.opacity = '1';
+
+                    // Remove the gate-active class to re-enable scrolling and full layout
+                    document.body.classList.remove('gate-active');
+
+                }, 500); // Wait for the 0.5s transition
+
+                errorMessage.classList.add('hidden');
+            } else {
+                // Key is invalid: Show error message
+                errorMessage.textContent = 'Invalid key. Access denied.';
+                errorMessage.classList.remove('hidden');
+
+                // Visual feedback: brief red border
+                keyInput.classList.add('border-red-500');
+
+                // Remove the red border and clear input after a short delay
+                setTimeout(() => {
+                    keyInput.classList.remove('border-red-500');
+                    keyInput.value = ''; 
+                }, 750);
+            }
         }
     </script>
 </body>
 </html>
+
