@@ -1,30 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
     <link rel="apple-touch-icon" href="/favicon.png">
-    <script>
-        window.addEventListener('beforeunload', function (event) {
-            event.preventDefault();
-            event.returnValue = '';
-            return 'if u leave ts might not save cuh';
-        });
-    </script>
-    <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5521219086088837" crossorigin="anonymous"></script>
-    <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WX5VS54ZDW"></script>
-    <meta name="google-adsense-account" content="ca-pub-5521219086088837">
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-        gtag('config', 'G-WX5VS54ZDW');
-    </script>
-    <script async src="https://fundingchoicesmessages.google.com/i/pub-5521219086088837?ers=1"></script><script>(function() {function signalGooglefcPresent() {if (!window.frames['googlefcPresent'][...]
-    <script src="https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main/gnmath.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moon</title>
@@ -39,6 +18,77 @@
     <meta name="twitter:title" content="Moon">
     <meta name="twitter:description" content="Moon — a dark, moonlit theme for the site. Explore zones under moonlight.">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Extra Key System Modal Styling for Smooth Moon Theme */
+        #keySystemOverlay {
+            display: none;
+            position: fixed;
+            z-index: 10003;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: rgba(20,22,27,0.6);
+            justify-content: center;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        #keySystemOverlay .popup {
+            background: var(--background-secondary,#191c20);
+            color: var(--text-main,#eee);
+            box-shadow: 0 4px 16px #0009;
+            border-radius: 13px;
+            max-width: 340px;
+            margin: auto;
+            padding: 26px 22px 22px 22px;
+            animation: fadeInScale 0.28s;
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95);}
+            to   { opacity: 1; transform: scale(1);}
+        }
+        #keySystemOverlay input[type="text"] {
+            width:100%;
+            margin: 18px 0 6px 0;
+            background: #222a32;
+            color: #fff;
+            border-radius:8px;
+            border: 1px solid #303438;
+            padding: 13px;
+            font-size: 17px;
+            outline: none;
+            letter-spacing: 0.05em;
+            box-sizing: border-box;
+        }
+        #keySystemOverlay button[type="submit"] {
+            width:100%;
+            background: var(--primary-color,#9269f7);
+            color:white;
+            border: none;
+            border-radius:7px;
+            padding:11px;
+            font-size:16px;
+            margin-top:6px;
+            cursor:pointer;
+            font-weight:600;
+            transition: background 0.18s;
+        }
+        #keySystemOverlay button[type="submit"]:hover {
+            background: #7d4fee;
+        }
+        #keySystemOverlay .popup-header button {
+            background: none; border: none;
+            color: #ccc; font-size: 1.5rem;
+            cursor:pointer; padding:0 0.5em 0 0;
+        }
+        #keySystemOverlay #keyNotice {
+            color: #e6be33;
+            font-size: 13px;
+            margin-bottom:10px;
+            margin-top:6px;
+            font-weight:600;
+        }
+        #keySystemOverlay #keyMessage {
+            margin-top:13px; font-size: 13px;
+        }
+    </style>
 </head>
 <body class="dark-mode">
     <header>
@@ -54,18 +104,19 @@
             </div>
             <div class="control-buttons">
                 <button id="settings" style="background-color: var(--primary-color); color: white; border: none; border-radius: 4px; padding: 0.5rem 1rem; font-size: 16px; cursor: pointer;">Settings</button>
+                <button onclick="openKeySystem()" style="background: var(--primary-color); color: white; border: none; border-radius: 4px; padding: 0.5rem 1rem; font-size: 16px; cursor: pointer; margin-left:10px;">Enter Key</button>
             </div>
         </div>
     </header>
     <ins class="adsbygoogle"
-    style="display:block; text-align:center;"
-    data-ad-client="ca-pub-5521219086088837"
-    data-ad-slot="5549138288"
-    data-ad-format="auto"
-    data-full-width-responsive="true"></ins>
-   <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-   </script>
+        style="display:block; text-align:center;"
+        data-ad-client="ca-pub-5521219086088837"
+        data-ad-slot="5549138288"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
 
     <main>
         <details id="featuredZonesWrapper" open>
@@ -108,15 +159,33 @@
         </div>
     </div>
 
+    <!-- Key System -->
+    <div id="keySystemOverlay">
+      <div class="popup">
+        <div class="popup-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="margin: 0; font-size: 1.2rem;">Enter Access Key</h3>
+          <button onclick="closeKeySystem()">&times;</button>
+        </div>
+        <form onsubmit="return submitKeySystem();">
+          <input id="keyInput" type="text" placeholder="Enter key..." autocomplete="off">
+          <div id="keyNotice">
+            If you tell someone the key without approval, key will be changed and possibly not told to anyone.
+          </div>
+          <button type="submit">Continue</button>
+          <div id="keyMessage"></div>
+        </form>
+      </div>
+    </div>
+
     <ins class="adsbygoogle"
-    style="display:block; text-align:center;"
-    data-ad-client="ca-pub-5521219086088837"
-    data-ad-slot="5549138288"
-    data-ad-format="auto"
-    data-full-width-responsive="true"></ins>
-   <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-   </script>
+        style="display:block; text-align:center;"
+        data-ad-client="ca-pub-5521219086088837"
+        data-ad-slot="5549138288"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
     <footer>
         <div class="footer-links">
             <a href="#" onclick="showContact(); return false;">Contact</a>
@@ -128,11 +197,56 @@
     </footer>
     <script src="script.js"></script>
     <script>
+        // Key System Logic
+        const GAME_KEY = "ilikecats!"; // <-- Put your real key here or fetch from backend
+
+        function openKeySystem() {
+            document.getElementById('keySystemOverlay').style.display = "flex";
+            document.getElementById('keyInput').value = "";
+            document.getElementById('keyMessage').textContent = "";
+            document.getElementById('keyInput').focus();
+        }
+        function closeKeySystem() {
+            document.getElementById('keySystemOverlay').style.display = "none";
+            document.getElementById('keyInput').value = "";
+            document.getElementById('keyMessage').textContent = "";
+        }
+        function submitKeySystem() {
+            const val = document.getElementById('keyInput').value.trim();
+            if (!val) {
+                document.getElementById('keyMessage').textContent = "Please enter the key.";
+                return false;
+            }
+            if (val === GAME_KEY) {
+                document.getElementById('keyMessage').textContent = "✅ Key accepted. Welcome!";
+                setTimeout(closeKeySystem, 900);
+                // UNLOCK LOGIC: Put code here to unlock rest of site/features
+            } else {
+                document.getElementById('keyMessage').textContent = "❌ Incorrect key!";
+            }
+            return false; // prevent reload
+        }
+        // Existing script logic...
         const search = new URLSearchParams(window.location.search);
         const privacy = search.get('privacy');
-        if (privacy) {
-            loadPrivacy();
-        }
+        if (privacy) loadPrivacy();
     </script>
+    <script>
+        window.addEventListener('beforeunload', function (event) {
+            event.preventDefault();
+            event.returnValue = '';
+            return 'if u leave ts might not save cuh';
+        });
+    </script>
+    <!-- Analytics and external scripts... (unchanged) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5521219086088837" crossorigin="anonymous"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WX5VS54ZDW"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date()); gtag('config', 'G-WX5VS54ZDW');
+    </script>
+    <script async src="https://fundingchoicesmessages.google.com/i/pub-5521219086088837?ers=1"></script>
+    <script src="https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main/gnmath.js"></script>
 </body>
 </html>
