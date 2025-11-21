@@ -19,7 +19,7 @@
     <meta name="twitter:description" content="Moon — a dark, moonlit theme for the site. Explore zones under moonlight.">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Extra Key System Modal Styling for Smooth Moon Theme */
+        /* Key System Modal Styling for Smooth Moon Theme */
         #keySystemOverlay {
             display: none;
             position: fixed;
@@ -102,7 +102,7 @@
                     <option value="popular">Popular</option>
                 </select>
             </div>
-            <div class="control-buttons">
+            <div class="control-buttons" id="controlButtons" style="display:none;">
                 <button id="settings" style="background-color: var(--primary-color); color: white; border: none; border-radius: 4px; padding: 0.5rem 1rem; font-size: 16px; cursor: pointer;">Settings</button>
                 <button onclick="openKeySystem()" style="background: var(--primary-color); color: white; border: none; border-radius: 4px; padding: 0.5rem 1rem; font-size: 16px; cursor: pointer; margin-left:10px;">Enter Key</button>
             </div>
@@ -118,7 +118,7 @@
         (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 
-    <main>
+    <main id="mainContent" style="display:none;">
         <details id="featuredZonesWrapper" open>
             <summary id="allZonesSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">Featured Zones</summary>
             <div id="featuredZones" class="zone-container"></div>
@@ -219,8 +219,11 @@
             }
             if (val === GAME_KEY) {
                 document.getElementById('keyMessage').textContent = "✅ Key accepted. Welcome!";
-                setTimeout(closeKeySystem, 900);
-                // UNLOCK LOGIC: Put code here to unlock rest of site/features
+                setTimeout(() => {
+                    closeKeySystem();
+                    document.getElementById('mainContent').style.display = "block";
+                    document.getElementById('controlButtons').style.display = "flex";
+                }, 900);
             } else {
                 document.getElementById('keyMessage').textContent = "❌ Incorrect key!";
             }
@@ -230,6 +233,11 @@
         const search = new URLSearchParams(window.location.search);
         const privacy = search.get('privacy');
         if (privacy) loadPrivacy();
+
+        // Show key system overlay on page load
+        window.onload = function() {
+            openKeySystem();
+        };
     </script>
     <script>
         window.addEventListener('beforeunload', function (event) {
