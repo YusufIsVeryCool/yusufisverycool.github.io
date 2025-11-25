@@ -19,75 +19,7 @@
     <meta name="twitter:description" content="Moon — a dark, moonlit theme for the site. Explore zones under moonlight.">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Key System Modal Styling for Smooth Moon Theme */
-        #keySystemOverlay {
-            display: none;
-            position: fixed;
-            z-index: 10003;
-            left: 0; top: 0; width: 100vw; height: 100vh;
-            background: rgba(20,22,27,0.6);
-            justify-content: center;
-            align-items: center;
-            transition: background 0.2s;
-        }
-        #keySystemOverlay .popup {
-            background: var(--background-secondary,#191c20);
-            color: var(--text-main,#eee);
-            box-shadow: 0 4px 16px #0009;
-            border-radius: 13px;
-            max-width: 340px;
-            margin: auto;
-            padding: 26px 22px 22px 22px;
-            animation: fadeInScale 0.28s;
-        }
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.95);}
-            to   { opacity: 1; transform: scale(1);}
-        }
-        #keySystemOverlay input[type="text"] {
-            width:100%;
-            margin: 18px 0 6px 0;
-            background: #222a32;
-            color: #fff;
-            border-radius:8px;
-            border: 1px solid #303438;
-            padding: 13px;
-            font-size: 17px;
-            outline: none;
-            letter-spacing: 0.05em;
-            box-sizing: border-box;
-        }
-        #keySystemOverlay button[type="submit"] {
-            width:100%;
-            background: var(--primary-color,#9269f7);
-            color:white;
-            border: none;
-            border-radius:7px;
-            padding:11px;
-            font-size:16px;
-            margin-top:6px;
-            cursor:pointer;
-            font-weight:600;
-            transition: background 0.18s;
-        }
-        #keySystemOverlay button[type="submit"]:hover {
-            background: #7d4fee;
-        }
-        #keySystemOverlay .popup-header button {
-            background: none; border: none;
-            color: #ccc; font-size: 1.5rem;
-            cursor:pointer; padding:0 0.5em 0 0;
-        }
-        #keySystemOverlay #keyNotice {
-            color: #e6be33;
-            font-size: 13px;
-            margin-bottom:10px;
-            margin-top:6px;
-            font-weight:600;
-        }
-        #keySystemOverlay #keyMessage {
-            margin-top:13px; font-size: 13px;
-        }
+        /* Other site-wide CSS, no key system styles */
     </style>
 </head>
 <body class="dark-mode">
@@ -102,9 +34,8 @@
                     <option value="popular">Popular</option>
                 </select>
             </div>
-            <div class="control-buttons" id="controlButtons" style="display:none;">
+            <div class="control-buttons" id="controlButtons" style="display:flex;">
                 <button id="settings" style="background-color: var(--primary-color); color: white; border: none; border-radius: 4px; padding: 0.5rem 1rem; font-size: 16px; cursor: pointer;">Settings</button>
-                <button onclick="openKeySystem()" style="background: var(--primary-color); color: white; border: none; border-radius: 4px; padding: 0.5rem 1rem; font-size: 16px; cursor: pointer; margin-left:10px;">Enter Key</button>
             </div>
         </div>
     </header>
@@ -118,7 +49,7 @@
         (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 
-    <main id="mainContent" style="display:none;">
+    <main id="mainContent">
         <details id="featuredZonesWrapper" open>
             <summary id="allZonesSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">Featured Zones</summary>
             <div id="featuredZones" class="zone-container"></div>
@@ -159,24 +90,6 @@
         </div>
     </div>
 
-    <!-- Key System -->
-    <div id="keySystemOverlay">
-      <div class="popup">
-        <div class="popup-header" style="display: flex; justify-content: space-between; align-items: center;">
-          <h3 style="margin: 0; font-size: 1.2rem;">Enter Access Key</h3>
-          <button onclick="closeKeySystem()">&times;</button>
-        </div>
-        <form onsubmit="return submitKeySystem();">
-          <input id="keyInput" type="text" placeholder="Enter key..." autocomplete="off">
-          <div id="keyNotice">
-            the key was made to get randoms off the site to be completely honest, If you tell someone the key without approval, key will be changed and possibly not told to anyone (meant for dexton).
-          </div>
-          <button type="submit">Continue</button>
-          <div id="keyMessage"></div>
-        </form>
-      </div>
-    </div>
-
     <ins class="adsbygoogle"
         style="display:block; text-align:center;"
         data-ad-client="ca-pub-5521219086088837"
@@ -197,47 +110,10 @@
     </footer>
     <script src="script.js"></script>
     <script>
-        // Key System Logic
-        const GAME_KEY = "Ginger snitched"; // <-- Put your real key here or fetch from backend
-
-        function openKeySystem() {
-            document.getElementById('keySystemOverlay').style.display = "flex";
-            document.getElementById('keyInput').value = "";
-            document.getElementById('keyMessage').textContent = "";
-            document.getElementById('keyInput').focus();
-        }
-        function closeKeySystem() {
-            document.getElementById('keySystemOverlay').style.display = "none";
-            document.getElementById('keyInput').value = "";
-            document.getElementById('keyMessage').textContent = "";
-        }
-        function submitKeySystem() {
-            const val = document.getElementById('keyInput').value.trim();
-            if (!val) {
-                document.getElementById('keyMessage').textContent = "Please enter the key.";
-                return false;
-            }
-            if (val === GAME_KEY) {
-                document.getElementById('keyMessage').textContent = "✅ Key accepted. Welcome!";
-                setTimeout(() => {
-                    closeKeySystem();
-                    document.getElementById('mainContent').style.display = "block";
-                    document.getElementById('controlButtons').style.display = "flex";
-                }, 900);
-            } else {
-                document.getElementById('keyMessage').textContent = "❌ Incorrect key!";
-            }
-            return false; // prevent reload
-        }
         // Existing script logic...
         const search = new URLSearchParams(window.location.search);
         const privacy = search.get('privacy');
         if (privacy) loadPrivacy();
-
-        // Show key system overlay on page load
-        window.onload = function() {
-            openKeySystem();
-        };
     </script>
     <script>
         window.addEventListener('beforeunload', function (event) {
@@ -258,4 +134,3 @@
     <script src="https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main/gnmath.js"></script>
 </body>
 </html>
-
